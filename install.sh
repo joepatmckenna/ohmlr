@@ -1,6 +1,6 @@
 #!/bin/bash
 (sudo rm -rf ohmlr.egg-info/)
-(rm -rf build/)
+(sudo rm -rf build/)
 (rm -rf dist/)
 (sudo pip install -e .)
 (python increment_version_number.py)

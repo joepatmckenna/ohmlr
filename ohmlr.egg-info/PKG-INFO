@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: ohmlr
-Version: 0.0.8
+Version: 0.0.9
 Summary: One-hot multinomial logisitc regression
 Home-page: http://joepatmckenna.github.io/ohmlr
 Author: Joseph P. McKenna
