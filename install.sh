@@ -1,10 +1,7 @@
 #!/bin/bash
-(sudo rm -rf ohmlr.egg-info/)
-(sudo rm -rf build/)
-(sudo rm -rf dist/)
-(sudo pip install -e .)
+(pip install -e .)
 (python increment_version_number.py)
-(python setup.py sdist)
+(sudo python setup.py sdist)
 (twine upload dist/*)
 (cd ./ohmlr && sphinx-apidoc -o ../doc -f .)
 (cd ./doc && make html)

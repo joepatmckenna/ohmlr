@@ -2,6 +2,7 @@ LICENSE
 MANIFEST.in
 README
 README.rst
+setup.py
 version
 ohmlr/__init__.py
 ohmlr/ohmlr.py

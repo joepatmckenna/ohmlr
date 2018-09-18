@@ -17,8 +17,6 @@ if __name__ == '__main__':
         author_email='joepatmckenna@gmail.com',
         url='http://joepatmckenna.github.io/ohmlr',
         download_url='https://pypi.org/project/ohmlr',
-        packages=setuptools.find_packages(),
-        classifiers=("Programming Language :: Python :: 3",
-                     "Operating System :: OS Independent"),
+        packages=['ohmlr'],
         license='MIT',
         keywords=['inference', 'statistics', 'machine learning'])
