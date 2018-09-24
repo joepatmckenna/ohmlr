@@ -102,18 +102,54 @@
 
 
 <div class="viewcode-block" id="ohmlr"><a class="viewcode-back" href="../../ohmlr.html#ohmlr.ohmlr.ohmlr">[docs]</a><span class="k">class</span> <span class="nc">ohmlr</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">tol</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_classes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_classes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_coeff</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_classes</span> <span class="o">=</span> <span class="n">x_classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_classes</span> <span class="o">=</span> <span class="n">y_classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_coeff</span> <span class="o">=</span> <span class="n">random_coeff</span>
+
+        <span class="k">if</span> <span class="n">x_classes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">y_classes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n_y_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_classes</span><span class="p">)</span>
+            <span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_classes</span><span class="p">)</span>
+            <span class="n">n_x_classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x_class</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_class</span> <span class="ow">in</span> <span class="n">x_classes</span><span class="p">])</span>
+            <span class="n">n_x_classes_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">n_x_classes</span><span class="p">)</span>
+            <span class="n">y_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">y_classes</span><span class="p">))}</span>
+            <span class="n">x_map</span> <span class="o">=</span> <span class="p">[{</span><span class="n">s</span><span class="p">:</span> <span class="n">i</span>
+                      <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">x_class</span><span class="p">))}</span>
+                     <span class="k">for</span> <span class="n">x_class</span> <span class="ow">in</span> <span class="n">x_classes</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">random_coeff</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_y_classes</span><span class="p">)</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n_y_classes</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">n_x_classes</span>
+                <span class="p">])</span>
+                <span class="n">v</span> <span class="o">-=</span> <span class="n">v</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">):</span>
+                    <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_y_classes</span><span class="p">)</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n_y_classes</span><span class="p">))</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">n_x_classes</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_y_classes</span> <span class="o">=</span> <span class="n">n_y_classes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span> <span class="o">=</span> <span class="n">n_features</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_x_classes</span> <span class="o">=</span> <span class="n">n_x_classes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_x_classes_sum</span> <span class="o">=</span> <span class="n">n_x_classes_sum</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_map</span> <span class="o">=</span> <span class="n">x_map</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_map</span> <span class="o">=</span> <span class="n">y_map</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">w</span>
 
     <span class="c1"># decision_function(X)	Predict confidence scores for samples.</span>
 
-<div class="viewcode-block" id="ohmlr.categorize_"><a class="viewcode-back" href="../../ohmlr.html#ohmlr.ohmlr.ohmlr.categorize_">[docs]</a>    <span class="k">def</span> <span class="nf">categorize_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
-        <span class="n">u_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">u</span><span class="p">))}</span>
+<div class="viewcode-block" id="ohmlr.categorize_"><a class="viewcode-back" href="../../ohmlr.html#ohmlr.ohmlr.ohmlr.categorize_">[docs]</a>    <span class="k">def</span> <span class="nf">categorize_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u_classes</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">u_classes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">u_classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="n">u_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">u_classes</span><span class="p">)}</span>
         <span class="n">u_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">u_map</span><span class="p">[</span><span class="n">ui</span><span class="p">]</span> <span class="k">for</span> <span class="n">ui</span> <span class="ow">in</span> <span class="n">u</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">u_int</span><span class="p">,</span> <span class="n">u_map</span></div>
 
-<div class="viewcode-block" id="ohmlr.predict_proba"><a class="viewcode-back" href="../../ohmlr.html#ohmlr.ohmlr.ohmlr.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="ohmlr.predict_proba"><a class="viewcode-back" href="../../ohmlr.html#ohmlr.ohmlr.ohmlr.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">return_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">n_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span>
         <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span>
         <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span>
@@ -121,14 +157,18 @@
 
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">n_samples</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
         <span class="n">x_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
             <span class="p">[[</span><span class="n">x_map</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">xij</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">xij</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">xi</span><span class="p">)]</span> <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
         <span class="n">h</span> <span class="o">=</span> <span class="n">v</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span>
             <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">w</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">x_int</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">)],</span> <span class="mi">0</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
         <span class="p">])</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
         <span class="n">p</span> <span class="o">/=</span> <span class="n">p</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">return_weights</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">p</span><span class="p">,</span> <span class="n">h</span>
         <span class="k">return</span> <span class="n">p</span></div>
 
 <div class="viewcode-block" id="ohmlr.predict_log_proba"><a class="viewcode-back" href="../../ohmlr.html#ohmlr.ohmlr.ohmlr.predict_log_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
@@ -145,16 +185,29 @@
 <div class="viewcode-block" id="ohmlr.score"><a class="viewcode-back" href="../../ohmlr.html#ohmlr.ohmlr.ohmlr.score">[docs]</a>    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ohmlr.fit"><a class="viewcode-back" href="../../ohmlr.html#ohmlr.ohmlr.ohmlr.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-
-        <span class="n">tol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol</span>
-        <span class="n">max_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span>
+<div class="viewcode-block" id="ohmlr.fit"><a class="viewcode-back" href="../../ohmlr.html#ohmlr.ohmlr.ohmlr.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">y</span><span class="p">,</span>
+            <span class="n">atol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
+            <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+            <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+            <span class="n">v_init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">w_init</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
         <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
 
-        <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">categorize_</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span> <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">]</span>
+        <span class="n">x_classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_classes</span>
+        <span class="n">y_classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_classes</span>
+
+        <span class="k">if</span> <span class="n">x_classes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x_classes</span> <span class="o">=</span> <span class="n">n_features</span> <span class="o">*</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x_classes</span><span class="p">)</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">x_classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x_classes</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">n_features</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">categorize_</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">ci</span><span class="p">)</span> <span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">ci</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">x_classes</span><span class="p">)]</span>
         <span class="n">x_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tmp</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
         <span class="n">x_map</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tmp</span><span class="p">]</span>
 
@@ -163,23 +216,31 @@
         <span class="n">n_x_classes_cumsum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">n_x_classes</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># one-hot encoding of x</span>
-        <span class="n">x_oh</span> <span class="o">=</span> <span class="n">csc_matrix</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="n">n_features</span><span class="p">),</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_samples</span><span class="p">),</span>
-            <span class="n">n_features</span><span class="p">),</span> <span class="p">(</span><span class="n">x_int</span> <span class="o">+</span> <span class="n">n_x_classes_cumsum</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">())))</span>
+        <span class="n">x_oh</span> <span class="o">=</span> <span class="n">csc_matrix</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="n">n_features</span><span class="p">),</span>
+                           <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_samples</span><span class="p">),</span> <span class="n">n_features</span><span class="p">),</span>
+                            <span class="p">(</span><span class="n">x_int</span> <span class="o">+</span> <span class="n">n_x_classes_cumsum</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">())),</span>
+                          <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_x_classes_sum</span><span class="p">))</span>
 
-        <span class="n">y_int</span><span class="p">,</span> <span class="n">y_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">categorize_</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">y_int</span><span class="p">,</span> <span class="n">y_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">categorize_</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_classes</span><span class="p">)</span>
 
         <span class="n">n_y_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_map</span><span class="p">)</span>
 
         <span class="c1"># one-hot encoding of y</span>
         <span class="n">y_oh</span> <span class="o">=</span> <span class="n">csc_matrix</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_samples</span><span class="p">),</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_samples</span><span class="p">),</span> <span class="n">y_int</span><span class="p">)))</span>
         <span class="c1"># &#39;cold&#39; classes</span>
+        <span class="n">y_hot</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_oh</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
         <span class="n">y_cold</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span><span class="n">y_oh</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
 
         <span class="n">i1i2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">n_x_classes_cumsum</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_x_classes_cumsum</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span><span class="o">.</span><span class="n">T</span>
 
-        <span class="n">v</span> <span class="o">=</span> <span class="n">matlib</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_y_classes</span><span class="p">)</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="n">matlib</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_x_classes_sum</span><span class="p">,</span> <span class="n">n_y_classes</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">v_init</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">matlib</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_y_classes</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span><span class="n">v_init</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">w_init</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">matlib</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_x_classes_sum</span><span class="p">,</span> <span class="n">n_y_classes</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">w_init</span><span class="p">))</span>
 
         <span class="k">def</span> <span class="nf">solve1</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">pinv</span><span class="p">):</span>
             <span class="n">w</span> <span class="o">=</span> <span class="n">pinv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
@@ -190,15 +251,17 @@
         <span class="k">def</span> <span class="nf">solve2</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">pinv</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">solve1</span><span class="p">(</span><span class="n">x_oh</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">u</span><span class="p">,</span> <span class="n">pinv</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">x_oh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">x_oh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">x_oh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">x_oh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
             <span class="n">solve</span> <span class="o">=</span> <span class="n">solve1</span>
             <span class="n">z</span> <span class="o">=</span> <span class="n">x_oh</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">x_oh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">solve</span> <span class="o">=</span> <span class="n">solve2</span>
             <span class="n">z</span> <span class="o">=</span> <span class="n">x_oh</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">x_oh</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">n_x_classes_sum</span> <span class="o">-</span> <span class="n">n_features</span> <span class="o">+</span> <span class="mi">1</span>
 
         <span class="c1"># SVD-based solve of x_oh * w = h</span>
-        <span class="n">svd</span> <span class="o">=</span> <span class="n">svds</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">n_x_classes_sum</span> <span class="o">-</span> <span class="n">n_features</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">svd</span> <span class="o">=</span> <span class="n">svds</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
         <span class="n">sv_pinv</span> <span class="o">=</span> <span class="n">svd</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">zero_sv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">sv_pinv</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">sv_pinv</span><span class="p">[</span><span class="n">zero_sv</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -206,9 +269,11 @@
         <span class="n">pinv</span> <span class="o">=</span> <span class="p">(</span><span class="n">svd</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">sv_pinv</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">svd</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
         <span class="c1"># discrepancy</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_y_classes</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">disc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_y_classes</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_y_classes</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">ll</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
 
             <span class="n">h0</span> <span class="o">=</span> <span class="n">v</span>
             <span class="n">h1</span> <span class="o">=</span> <span class="n">x_oh</span> <span class="o">*</span> <span class="n">w</span>
@@ -226,11 +291,29 @@
                 <span class="n">w</span><span class="p">[</span><span class="n">i1</span><span class="p">:</span><span class="n">i2</span><span class="p">]</span> <span class="o">-=</span> <span class="n">w</span><span class="p">[</span><span class="n">i1</span><span class="p">:</span><span class="n">i2</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
             <span class="c1"># discrepancy: avg 2-norm squared of cold entries</span>
-            <span class="n">d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">y_cold</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+            <span class="n">disc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">y_cold</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+            <span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dh</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+            <span class="n">ll</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">y_hot</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
 
-        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="c1"># if disc[-1] &gt; disc[-2]:</span>
+            <span class="c1">#     # print(&#39;DISC BREAK !!!!!!&#39;, it, &#39;!!!!!!!!!!!!&#39;)</span>
+            <span class="c1">#     break</span>
+
+            <span class="c1"># if np.abs(err[-1] - err[-2]) &lt; atol:</span>
+            <span class="c1">#     # print(&#39;AERR BREAK !!!!!!&#39;, it, &#39;!!!!!!!!!!!!&#39;)</span>
+            <span class="c1">#     break</span>
+
+            <span class="c1"># if np.abs(err[-1] - err[-2]) / err[-2] &lt; rtol:</span>
+            <span class="c1">#     # print(&#39;RERR BREAK !!!!!!&#39;, it, &#39;!!!!!!!!!!!!&#39;)</span>
+            <span class="c1">#     break</span>
+
+        <span class="c1"># if it == max_iter:</span>
+        <span class="c1">#     # print(&#39;NO BREAKKKKKK&#39;, it)</span>
+
+        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
         <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="n">i1</span><span class="p">:</span><span class="n">i2</span><span class="p">])</span> <span class="k">for</span> <span class="n">i1</span><span class="p">,</span> <span class="n">i2</span> <span class="ow">in</span> <span class="n">i1i2</span><span class="p">])</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">disc</span> <span class="o">=</span> <span class="n">disc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="n">err</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span> <span class="o">=</span> <span class="n">n_samples</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span> <span class="o">=</span> <span class="n">n_features</span>
@@ -247,32 +330,40 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pinv</span> <span class="o">=</span> <span class="n">pinv</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">v</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">w</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">d</span>
-        <span class="k">return</span> <span class="bp">self</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disc</span> <span class="o">=</span> <span class="n">disc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">err</span> <span class="o">=</span> <span class="n">err</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ll</span> <span class="o">=</span> <span class="n">ll</span></div>
 
-<div class="viewcode-block" id="ohmlr.random"><a class="viewcode-back" href="../../ohmlr.html#ohmlr.ohmlr.ohmlr.random">[docs]</a>    <span class="k">def</span> <span class="nf">random</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">n_x_classes</span><span class="p">,</span> <span class="n">n_y_classes</span><span class="p">):</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_y_classes</span><span class="p">)</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n_y_classes</span><span class="p">))</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">n_x_classes</span><span class="p">])</span>
-        <span class="n">v</span> <span class="o">-=</span> <span class="n">v</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">):</span>
-            <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+    <span class="c1"># def random(self, n_features=None, n_x_classes=None, n_y_classes=None):</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span> <span class="o">=</span> <span class="n">n_features</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_x_classes</span> <span class="o">=</span> <span class="n">n_x_classes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_y_classes</span> <span class="o">=</span> <span class="n">n_y_classes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">v</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">w</span>
-        <span class="k">return</span> <span class="bp">self</span></div>
+    <span class="c1">#     if self.x_classes is not None:</span>
+    <span class="c1">#         n_features = len(self.x_classes)</span>
+    <span class="c1">#         n_x_classes = [len(x_class) for x_class in self.x_classes]</span>
+    <span class="c1">#     if self.y_classes is not None:</span>
+    <span class="c1">#         n_y_classes = len(self.y_classes)</span>
+
+    <span class="c1">#     v = np.random.normal(size=n_y_classes)</span>
+    <span class="c1">#     w = np.array(</span>
+    <span class="c1">#         [np.random.normal(size=(n, n_y_classes)) for n in n_x_classes])</span>
+    <span class="c1">#     v -= v.mean()</span>
+    <span class="c1">#     for i in range(n_features):</span>
+    <span class="c1">#         w[i] -= w[i].mean(0)</span>
+    <span class="c1">#         w[i] -= w[i].mean(1)[:, np.newaxis]</span>
+
+    <span class="c1">#     self.n_features = n_features</span>
+    <span class="c1">#     self.n_x_classes = n_x_classes</span>
+    <span class="c1">#     self.n_y_classes = n_y_classes</span>
+    <span class="c1">#     self.v = v</span>
+    <span class="c1">#     self.w = w</span>
+    <span class="c1">#     return self</span>
 
 <div class="viewcode-block" id="ohmlr.generate_data"><a class="viewcode-back" href="../../ohmlr.html#ohmlr.ohmlr.ohmlr.generate_data">[docs]</a>    <span class="k">def</span> <span class="nf">generate_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">):</span>
 
         <span class="n">n_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span>
         <span class="n">n_x_classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_x_classes</span>
         <span class="n">n_y_classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_y_classes</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span>
             <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
@@ -286,7 +377,13 @@
         <span class="n">p</span> <span class="o">/=</span> <span class="n">p</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
         <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div></div>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
+
+<div class="viewcode-block" id="ohmlr.get_params"><a class="viewcode-back" href="../../ohmlr.html#ohmlr.ohmlr.ohmlr.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">x_classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x_classes</span><span class="p">,</span>
+            <span class="n">y_classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y_classes</span><span class="p">,</span>
+            <span class="n">random_coeff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_coeff</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

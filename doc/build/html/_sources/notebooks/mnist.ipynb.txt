@@ -2,7 +2,7 @@
  "cells": [
   {
    "cell_type": "code",
-   "execution_count": 37,
+   "execution_count": 6,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -13,7 +13,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 38,
+   "execution_count": 7,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -22,46 +22,61 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 39,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "x = digits.data.astype(int)\n",
-    "y = digits.target.astype(int)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 40,
+   "execution_count": 8,
    "metadata": {},
    "outputs": [
     {
      "data": {
       "text/plain": [
-       "(1.0, 0.8)"
+       "(0, 9)"
       ]
      },
-     "execution_count": 40,
+     "execution_count": 8,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
-    "model = ohmlr.ohmlr.ohmlr()\n",
-    "split = 100\n",
-    "# shuffle = np.random.permutation(range(x.shape[0]))\n",
-    "# x = x[shuffle]\n",
-    "# y = y[shuffle]\n",
-    "model.fit(x[:-split], y[:-split])\n",
-    "model.score(x[:-split], y[:-split]), model.score(x[-split:], y[-split:])"
+    "x = digits.data.astype(int)\n",
+    "y = digits.target.astype(int)\n",
+    "y.min(), y.max()"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 9,
    "metadata": {},
    "outputs": [],
-   "source": []
+   "source": [
+    "shuffle = np.random.permutation(range(x.shape[0]))\n",
+    "x = x[shuffle]\n",
+    "y = y[shuffle]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(0.9593400117855039, 0.68)"
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "x_classes = np.arange(x.min(), x.max()+1)\n",
+    "y_classes = np.arange(y.min(), y.max()+1)\n",
+    "model = ohmlr.ohmlr.ohmlr(x_classes=x_classes, y_classes=y_classes)\n",
+    "split = 100\n",
+    "model.fit(x[:-split], y[:-split])\n",
+    "model.score(x[:-split], y[:-split]), model.score(x[-split:], y[-split:])"
+   ]
   },
   {
    "cell_type": "code",
