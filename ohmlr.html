@@ -100,21 +100,26 @@
 <span id="ohmlr-ohmlr-module"></span><h2>ohmlr.ohmlr module<a class="headerlink" href="#module-ohmlr.ohmlr" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ohmlr.ohmlr.ohmlr">
-<em class="property">class </em><code class="descclassname">ohmlr.ohmlr.</code><code class="descname">ohmlr</code><span class="sig-paren">(</span><em>tol=0.0001</em>, <em>max_iter=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ohmlr/ohmlr.html#ohmlr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ohmlr.ohmlr.ohmlr" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ohmlr.ohmlr.</code><code class="descname">ohmlr</code><span class="sig-paren">(</span><em>x_classes=None</em>, <em>y_classes=None</em>, <em>random_coeff=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ohmlr/ohmlr.html#ohmlr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ohmlr.ohmlr.ohmlr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="method">
 <dt id="ohmlr.ohmlr.ohmlr.categorize_">
-<code class="descname">categorize_</code><span class="sig-paren">(</span><em>u</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ohmlr/ohmlr.html#ohmlr.categorize_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ohmlr.ohmlr.ohmlr.categorize_" title="Permalink to this definition">¶</a></dt>
+<code class="descname">categorize_</code><span class="sig-paren">(</span><em>u</em>, <em>u_classes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ohmlr/ohmlr.html#ohmlr.categorize_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ohmlr.ohmlr.ohmlr.categorize_" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ohmlr.ohmlr.ohmlr.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ohmlr/ohmlr.html#ohmlr.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ohmlr.ohmlr.ohmlr.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>atol=0.0001</em>, <em>rtol=0.001</em>, <em>max_iter=500</em>, <em>v_init=None</em>, <em>w_init=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ohmlr/ohmlr.html#ohmlr.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ohmlr.ohmlr.ohmlr.fit" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ohmlr.ohmlr.ohmlr.generate_data">
 <code class="descname">generate_data</code><span class="sig-paren">(</span><em>n_samples</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ohmlr/ohmlr.html#ohmlr.generate_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ohmlr.ohmlr.ohmlr.generate_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ohmlr.ohmlr.ohmlr.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ohmlr/ohmlr.html#ohmlr.get_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ohmlr.ohmlr.ohmlr.get_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -129,12 +134,7 @@
 
 <dl class="method">
 <dt id="ohmlr.ohmlr.ohmlr.predict_proba">
-<code class="descname">predict_proba</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ohmlr/ohmlr.html#ohmlr.predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ohmlr.ohmlr.ohmlr.predict_proba" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ohmlr.ohmlr.ohmlr.random">
-<code class="descname">random</code><span class="sig-paren">(</span><em>n_features</em>, <em>n_x_classes</em>, <em>n_y_classes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ohmlr/ohmlr.html#ohmlr.random"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ohmlr.ohmlr.ohmlr.random" title="Permalink to this definition">¶</a></dt>
+<code class="descname">predict_proba</code><span class="sig-paren">(</span><em>x</em>, <em>return_weights=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ohmlr/ohmlr.html#ohmlr.predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ohmlr.ohmlr.ohmlr.predict_proba" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">

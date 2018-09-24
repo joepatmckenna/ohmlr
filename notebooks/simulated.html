@@ -259,36 +259,139 @@ div.nboutput div.output_area.stderr {
 </style>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [10]:
+<span></span>In [317]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">ohmlr</span>
+<span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">ohmlr</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [21]:
+<span></span>In [318]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">n_features</span> <span class="o">=</span> <span class="mi">16</span>
-<span class="n">n_x_classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_features</span><span class="p">)</span>
-<span class="n">n_y_classes</span> <span class="o">=</span> <span class="mi">8</span>
+<span></span><span class="n">n_features</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">max_iter</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">x_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">)]</span>
+<span class="n">y_classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [319]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">model</span> <span class="o">=</span> <span class="n">ohmlr</span><span class="o">.</span><span class="n">ohmlr</span><span class="o">.</span><span class="n">ohmlr</span><span class="p">(</span><span class="n">x_classes</span><span class="o">=</span><span class="n">x_classes</span><span class="p">,</span> <span class="n">y_classes</span><span class="o">=</span><span class="n">y_classes</span><span class="p">,</span> <span class="n">random_coeff</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [320]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># fig = plt.figure(figsize=(4,4))</span>
+<span class="c1"># ax = plt.gca()</span>
+<span class="c1"># ax.hist([model.v, np.vstack(model.w).flatten()], label=[&#39;bias&#39;,&#39;weights&#39;], density=True)</span>
+<span class="c1"># ax.set_xlabel(&#39;$v, w$&#39;)</span>
+<span class="c1"># ax.set_ylabel(&#39;density&#39;)</span>
+<span class="c1"># plt.legend()</span>
+<span class="c1"># plt.show()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [321]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">v</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
+<span class="n">n_param</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate_data</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [322]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># plt.plot(x[:,0])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [323]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">max_iter</span><span class="p">)</span>
+<span class="n">disc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">max_iter</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v_init</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">v</span><span class="p">,</span> <span class="n">w_init</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
+    <span class="n">mse</span><span class="p">[</span><span class="n">it</span><span class="p">]</span> <span class="o">=</span> <span class="p">(((</span><span class="n">v</span><span class="o">-</span><span class="n">model</span><span class="o">.</span><span class="n">v</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">+</span> <span class="p">((</span><span class="n">w</span><span class="o">-</span><span class="n">model</span><span class="o">.</span><span class="n">w</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">/</span> <span class="n">n_param</span>
+    <span class="n">disc</span><span class="p">[</span><span class="n">it</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">disc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">ohmlr</span><span class="o">.</span><span class="n">ohmlr</span><span class="o">.</span><span class="n">ohmlr</span><span class="p">()</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_x_classes</span><span class="p">,</span> <span class="n">n_y_classes</span><span class="p">)</span>
-<span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">v</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">w</span>
-<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate_data</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">bx</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+<span class="n">cx</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">d</span><span class="p">,</span> <span class="s1">&#39;k-&#39;</span><span class="p">)</span>
-<span class="n">lo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
-<span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mse</span><span class="p">,</span> <span class="s1">&#39;k-&#39;</span><span class="p">)</span>
+<span class="n">bx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">disc</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">)</span>
+<span class="n">cx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">ll</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">)</span>
+<span class="n">dx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">err</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[323]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[&lt;matplotlib.lines.Line2D at 0x132f2a0b8&gt;]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_simulated_6_1.png" src="../_images/notebooks_simulated_6_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [324]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># print(model.score(x, y))</span>
+
+<span class="c1"># fig, ax = plt.subplots(1, 2, figsize=(8, 4))</span>
+<span class="c1"># ax[0].plot(mse, &#39;k-&#39;)</span>
+<span class="c1"># bx = ax[0].twinx()</span>
+<span class="c1"># bx.plot(model.disc, &#39;r-&#39;)</span>
+
+<span class="c1"># lo = min(v.min(), np.vstack(w).min())</span>
+<span class="c1"># hi = max(v.max(), np.vstack(w).max())</span>
 <span class="c1"># grid = np.linspace(lo, hi)</span>
 <span class="c1"># ax[1].plot(grid, grid, &#39;k--&#39;, alpha=0.5)</span>
 <span class="c1"># ax[1].scatter(model.v, v, c=&#39;r&#39;, s=10)</span>
@@ -302,50 +405,14 @@ div.nboutput div.output_area.stderr {
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
 </div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-0.839
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-21-fd4c9764e19f&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">     11</span> fig<span class="ansi-blue-fg">,</span> ax <span class="ansi-blue-fg">=</span> plt<span class="ansi-blue-fg">.</span>subplots<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">,</span> figsize<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">8</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">4</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     12</span> ax<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>plot<span class="ansi-blue-fg">(</span>model<span class="ansi-blue-fg">.</span>d<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;k-&#39;</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">---&gt; 13</span><span class="ansi-red-fg"> </span>lo <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>min<span class="ansi-blue-fg">(</span>v<span class="ansi-blue-fg">,</span> np<span class="ansi-blue-fg">.</span>vstack<span class="ansi-blue-fg">(</span>w<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>min<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     14</span> hi <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>max<span class="ansi-blue-fg">(</span>v<span class="ansi-blue-fg">,</span> np<span class="ansi-blue-fg">.</span>vstack<span class="ansi-blue-fg">(</span>w<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>max<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     15</span> <span class="ansi-red-fg"># grid = np.linspace(lo, hi)</span>
-
-<span class="ansi-green-fg">~/.pyenv/versions/jupyter3/lib/python3.7/site-packages/numpy/core/fromnumeric.py</span> in <span class="ansi-cyan-fg">amin</span><span class="ansi-blue-fg">(a, axis, out, keepdims, initial)</span>
-<span class="ansi-green-intense-fg ansi-bold">   2440</span>     &#34;&#34;&#34;
-<span class="ansi-green-intense-fg ansi-bold">   2441</span>     return _wrapreduction(a, np.minimum, &#39;min&#39;, axis, None, out, keepdims=keepdims,
-<span class="ansi-green-fg">-&gt; 2442</span><span class="ansi-red-fg">                           initial=initial)
-</span><span class="ansi-green-intense-fg ansi-bold">   2443</span>
-<span class="ansi-green-intense-fg ansi-bold">   2444</span>
-
-<span class="ansi-green-fg">~/.pyenv/versions/jupyter3/lib/python3.7/site-packages/numpy/core/fromnumeric.py</span> in <span class="ansi-cyan-fg">_wrapreduction</span><span class="ansi-blue-fg">(obj, ufunc, method, axis, dtype, out, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">     81</span>                 <span class="ansi-green-fg">return</span> reduction<span class="ansi-blue-fg">(</span>axis<span class="ansi-blue-fg">=</span>axis<span class="ansi-blue-fg">,</span> out<span class="ansi-blue-fg">=</span>out<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>passkwargs<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     82</span>
-<span class="ansi-green-fg">---&gt; 83</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">return</span> ufunc<span class="ansi-blue-fg">.</span>reduce<span class="ansi-blue-fg">(</span>obj<span class="ansi-blue-fg">,</span> axis<span class="ansi-blue-fg">,</span> dtype<span class="ansi-blue-fg">,</span> out<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>passkwargs<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     84</span>
-<span class="ansi-green-intense-fg ansi-bold">     85</span>
-
-<span class="ansi-red-fg">TypeError</span>: &#39;numpy.float64&#39; object cannot be interpreted as an integer
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_simulated_1_2.png" src="../_images/notebooks_simulated_1_2.png" />
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
